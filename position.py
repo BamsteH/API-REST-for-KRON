@@ -1,71 +1,136 @@
+# import time
+# from gpiozero import LED, Button
+# from signal import pause
+# import requests
+#
+
+
 import time
-from gpiozero import LED, Button
+from gpiozero import PWMLED, Button
 from signal import pause
 import requests
 
-button1 = Button(1)
-button2 = Button(2)
-button3 = Button(3)
-button4 = Button(4)
-button5 = Button(5)
-button6 = Button(6)
-
-ledRed = LED(7)
-ledGreen = LED(8)
-
-
 url = 'http://192.168.1.81'
+control = '/control'
 controler = '/controler'
 setter = '/set'
-startRec = "/startRecording"
-stopRec = "/stopRecording"
-startPlay = "/startPlayback"
+startRec = '/startRecording'
+stopRec = '/stopRecording'
+startPlay = '/startPlayback'
+startDisplay = 'startLivedisplay'
+frame = "framerate"
 
 playPos = "playbackPosition"
 fps = 60
 multiplyFPS = 2
 
-post = request.post('http://127.0.0.1:8080/api/auth/signin', json = {"login":"admin1@test.com",
-                                                                     "password":"aaaa"})
-print("Hello World")
+button_playback = Button(2)
+button3 = Button(3)
+button4 = Button(4)
+button17 = Button(17)
+button27 = Button(27)
+button22 = Button(22)
+button10 = Button(10)
+button9 = Button(9)
 
-button1.when_pressed = {
-    ledRed.on
-    post = requests.post('http://192.168.1.81/control/startLivedisplay', json = {})
-    post = requests.post('http://192.168.1.81/control/startRecording', json = {})
-    }
+#current multipliyer
+CM = 1
 
-button2.when_pressed = {
-    post = requests.post('http://192.168.1.81/control/stopRecording')
-    post = requests.post('http://192.168.1.81/control/startPlayback', json = {})
-    }
+if(button9.is_pressed):
+    CM = 2
+else:
+    CM = 1
 
-button3.when_pressed = {
-    post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":60})
-    }
+def sleep():
+    time.sleep(0.3)
 
-button3.when_released = {
-    post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":0})
-    }
+def playback():
+    post = requests.post(url+control+startDisplay, json = {})
+    post = requests.post(url+control+startPlay, json = {})
+    print('sleep')
+    sleep
+def stopRecording():
+    post = requests.post(url + control + stopRec)
+    post = requests.post(url + control + startPlay, json = {})
+    sleep
+def startPlay():
+    post = requests.post(url + control + startPlay, json = {frame:CM*60})
+    sleep
+def stopPlay():
+    post = requests.post(url + control + stopPlay)
+    sleep
+def startPlayRevert():
+    post = requests.post(url + control + startPlay, json = {frame: -CM*60})
+    sleep
 
-button4.when_pressed = {
-    post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":-60})
-    }
+button_playback.when_pressed = playback
 
-button4.when_released = {
-    post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":0})
-    }
-
-button5.when_pressed = {
-    post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":60})
-    }
-
-button6.when_pressed = {
-    post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":-60})
-    }
 
 
 pause()
+# button1 = Button(1)
+# button2 = Button(2)
+# button3 = Button(3)
+# button4 = Button(4)
+# button5 = Button(5)
+# button6 = Button(6)
+#
+# ledRed = LED(7)
+# ledGreen = LED(8)
+#
+#
+# url = 'http://192.168.1.81'
+# controler = '/controler'
+# setter = '/set'
+# startRec = "/startRecording"
+# stopRec = "/stopRecording"
+# startPlay = "/startPlayback"
+#
+# playPos = "playbackPosition"
+# fps = 60
+# multiplyFPS = 2
+#
+# post = request.post('http://127.0.0.1:8080/api/auth/signin', json = {"login":"admin1@test.com",
+#                                                                      "password":"aaaa"})
+# print("Hello World")
+#
+# button1.when_pressed = {
+#     ledRed.on
+#     post = requests.post('http://192.168.1.81/control/startLivedisplay', json = {})
+#     post = requests.post('http://192.168.1.81/control/startRecording', json = {})
+#     }
+#
+# button2.when_pressed = {
+#     post = requests.post('http://192.168.1.81/control/stopRecording')
+#     post = requests.post('http://192.168.1.81/control/startPlayback', json = {})
+#     }
+#
+# button3.when_pressed = {
+#     post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":60})
+#     }
+#
+# button3.when_released = {
+#     post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":0})
+#     }
+#
+# button4.when_pressed = {
+#     post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":-60})
+#     }
+#
+# button4.when_released = {
+#     post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":0})
+#     }
+#
+# button5.when_pressed = {
+#     post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":60})
+#     }
+#
+# button6.when_pressed = {
+#     post = requests.post('http://192.168.1.81/control/startPlayback', json = {"framerate":-60})
+#     }
+#
+#
+# pause()
 #post = requests.post('http://192.168.1.81/controler/set', json={"playbackPosition":300})
 #post = requests.post('http://192.168.1.81/controler/set', json = {"loopcount":50})
 #post = requests.post(url, json={"playbackPosition":100})
